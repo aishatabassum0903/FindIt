@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browse Items — FindIt</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy:#0A1628; --blue:#1B4FFF; --teal:#00C6B3; --amber:#FFB830;
+      --white:#FFFFFF; --gray-50:#F7F9FC; --gray-100:#EEF2F8;
+      --gray-200:#D8E0ED; --gray-400:#8A97B0; --gray-600:#4A5568;
+      --shadow-sm:0 2px 8px rgba(10,22,40,0.06);
+      --shadow-md:0 8px 32px rgba(10,22,40,0.10);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Outfit',sans-serif;background:var(--gray-50);color:var(--navy);-webkit-font-smoothing:antialiased;}
+    a{text-decoration:none;color:inherit;}
+
+    /* NAVBAR */
+    .navbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:72px;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(10,22,40,0.06);}
+    .nav-logo{display:flex;align-items:center;gap:10px;font-family:'Instrument Serif',serif;font-size:24px;color:var(--navy);}
+    .nav-logo-icon{width:34px;height:34px;background:var(--blue);border-radius:9px;display:flex;align-items:center;justify-content:center;}
+    .nav-logo-icon svg{width:18px;height:18px;fill:none;stroke:white;stroke-width:2.5;stroke-linecap:round;}
+    .nav-links{display:flex;align-items:center;gap:4px;list-style:none;}
+    .nav-links a{padding:7px 15px;border-radius:8px;font-size:14px;font-weight:500;color:var(--gray-600);transition:all 0.18s;}
+    .nav-links a:hover{background:var(--gray-50);color:var(--navy);}
+    .nav-links a.active{color:var(--blue);background:#EFF6FF;}
+    .nav-cta{display:flex;align-items:center;gap:10px;}
+    .btn-login{padding:8px 18px;border-radius:8px;font-size:14px;font-weight:500;color:var(--navy);border:1.5px solid var(--gray-200);background:white;transition:all 0.18s;cursor:pointer;}
+    .btn-login:hover{border-color:var(--blue);color:var(--blue);}
+    .btn-primary-nav{padding:8px 20px;border-radius:8px;font-size:14px;font-weight:600;color:white;background:var(--blue);border:none;cursor:pointer;transition:all 0.18s;box-shadow:0 4px 12px rgba(27,79,255,0.28);}
+    .btn-primary-nav:hover{background:#1240E0;transform:translateY(-1px);}
+
+    /* PAGE HEADER */
+    .page-header{background:white;border-bottom:1px solid var(--gray-200);padding:40px 48px 32px;}
+    .page-header-inner{max-width:1280px;margin:0 auto;}
+    .breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gray-400);margin-bottom:16px;}
+    .breadcrumb a{color:var(--gray-400);transition:color 0.18s;}
+    .breadcrumb a:hover{color:var(--blue);}
+    .breadcrumb svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;}
+    .page-title{font-family:'Instrument Serif',serif;font-size:38px;color:var(--navy);letter-spacing:-0.5px;margin-bottom:20px;}
+    .page-title span{color:var(--blue);font-style:italic;}
+
+    /* SEARCH BAR */
+    .search-box{position:relative;max-width:560px;}
+    .search-box svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:18px;height:18px;fill:none;stroke:var(--gray-400);stroke-width:2;stroke-linecap:round;pointer-events:none;}
+    .search-input{width:100%;padding:13px 16px 13px 46px;border:1.5px solid var(--gray-200);border-radius:12px;font-family:'Outfit',sans-serif;font-size:14px;color:var(--navy);background:white;outline:none;transition:all 0.2s;}
+    .search-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(27,79,255,0.08);}
+    .search-input::placeholder{color:var(--gray-400);}
+
+    /* LAYOUT */
+    .browse-layout{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:260px 1fr;gap:28px;padding:32px 48px 64px;}
+
+    /* FILTER SIDEBAR */
+    .filter-sidebar{height:fit-content;position:sticky;top:88px;}
+    .filter-card{background:white;border-radius:20px;border:1.5px solid var(--gray-200);padding:24px;margin-bottom:16px;}
+    .filter-card-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--gray-400);margin-bottom:16px;}
+    .filter-option{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:500;color:var(--gray-600);transition:all 0.15s;margin-bottom:2px;}
+    .filter-option:hover{background:var(--gray-50);color:var(--navy);}
+    .filter-option input[type="radio"],.filter-option input[type="checkbox"]{width:16px;height:16px;accent-color:var(--blue);flex-shrink:0;}
+    .filter-divider{height:1px;background:var(--gray-100);margin:16px 0;}
+    .btn-reset{width:100%;padding:10px;border-radius:10px;border:1.5px solid var(--gray-200);background:white;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;color:var(--gray-600);cursor:pointer;transition:all 0.18s;}
+    .btn-reset:hover{border-color:var(--navy);color:var(--navy);}
+
+    /* ITEMS AREA */
+    .items-area{}
+    .items-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;}
+    .results-count{font-size:14px;color:var(--gray-400);font-weight:500;}
+    .results-count strong{color:var(--navy);}
+    .sort-select{padding:9px 14px;border:1.5px solid var(--gray-200);border-radius:10px;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;color:var(--navy);background:white;outline:none;cursor:pointer;}
+    .btn-report-new{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:10px;font-size:13px;font-weight:700;color:white;background:var(--blue);border:none;cursor:pointer;transition:all 0.18s;box-shadow:0 4px 12px rgba(27,79,255,0.25);}
+    .btn-report-new:hover{background:#1240E0;transform:translateY(-1px);}
+    .btn-report-new svg{width:14px;height:14px;fill:none;stroke:white;stroke-width:2.5;}
+
+    /* ITEMS GRID */
+    .items-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+    .item-card{background:white;border-radius:20px;border:1.5px solid var(--gray-200);overflow:hidden;cursor:pointer;transition:all 0.22s;}
+    .item-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-md);border-color:rgba(27,79,255,0.3);}
+    .item-img{width:100%;height:190px;object-fit:cover;display:block;background:var(--gray-100);}
+    .item-img-ph{width:100%;height:190px;background:linear-gradient(135deg,var(--gray-50),var(--gray-100));display:flex;align-items:center;justify-content:center;font-size:52px;}
+    .item-body{padding:18px 20px 22px;}
+    .item-badges{display:flex;gap:6px;margin-bottom:10px;}
+    .item-badge{padding:3px 10px;border-radius:100px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.3px;}
+    .badge-lost{background:#FEE2E2;color:#991B1B;}
+    .badge-found{background:#D1FAE5;color:#065F46;}
+    .badge-open{background:#DBEAFE;color:#1D4ED8;}
+    .badge-resolved{background:var(--gray-100);color:var(--gray-600);}
+    .item-title{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:10px;line-height:1.4;}
+    .item-meta{display:flex;flex-direction:column;gap:5px;}
+    .meta-row{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--gray-400);}
+    .meta-row svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;flex-shrink:0;}
+    .pin-tag{color:var(--amber);font-weight:600;}
+
+    /* SKELETON */
+    .skeleton{background:linear-gradient(90deg,var(--gray-100) 25%,var(--gray-200) 50%,var(--gray-100) 75%);background-size:200%;animation:shimmer 1.3s infinite;border-radius:8px;}
+    @keyframes shimmer{to{background-position:-200% 0;}}
+
+    /* EMPTY STATE */
+    .empty-state{grid-column:1/-1;text-align:center;padding:80px 20px;}
+    .empty-icon{font-size:64px;margin-bottom:16px;}
+    .empty-state h3{font-size:22px;font-weight:700;color:var(--navy);margin-bottom:8px;}
+    .empty-state p{font-size:15px;color:var(--gray-400);}
+
+    /* PAGINATION */
+    .pagination{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:40px;}
+    .page-btn{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:10px;border:1.5px solid var(--gray-200);background:white;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.18s;color:var(--navy);}
+    .page-btn:hover{border-color:var(--blue);color:var(--blue);}
+    .page-btn.active{background:var(--blue);color:white;border-color:var(--blue);}
+
+    @media(max-width:1024px){.browse-layout{grid-template-columns:1fr;padding:24px 20px 48px;}.filter-sidebar{position:static;}.items-grid{grid-template-columns:repeat(2,1fr);}}
+    @media(max-width:768px){.navbar{padding:0 20px;}.nav-links{display:none;}.page-header{padding:32px 20px 24px;}.items-grid{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="../index.html" class="nav-logo">
+    <div class="nav-logo-icon">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg>
+    </div>
+    FindIt
+  </a>
+  <ul class="nav-links">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="browse.html" class="active">Browse</a></li>
+    <li><a href="report.html">Report Item</a></li>
+  </ul>
+  <div class="nav-cta" id="nav-cta">
+    <a href="login.html" class="btn-login">Sign In</a>
+    <a href="register.html" class="btn-primary-nav">Get Started</a>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="breadcrumb">
+      <a href="../index.html">Home</a>
+      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+      <span>Browse Items</span>
+    </div>
+    <h1 class="page-title">Browse <span>all items</span></h1>
+    <div class="search-box">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg>
+      <input type="text" class="search-input" id="search-input" placeholder="Search by title, brand, description..." oninput="debounceSearch(this.value)">
+    </div>
+  </div>
+</div>
+
+<!-- BROWSE LAYOUT -->
+<div class="browse-layout">
+
+  <!-- FILTERS -->
+  <div class="filter-sidebar">
+    <div class="filter-card">
+      <div class="filter-card-title">Item Type</div>
+      <label class="filter-option"><input type="radio" name="type" value="" checked onchange="applyFilters()"> All Items</label>
+      <label class="filter-option"><input type="radio" name="type" value="lost" onchange="applyFilters()"> Missing Items</label>
+      <label class="filter-option"><input type="radio" name="type" value="found" onchange="applyFilters()"> Recovered Items</label>
+    </div>
+
+    <div class="filter-card">
+      <div class="filter-card-title">Status</div>
+      <label class="filter-option"><input type="radio" name="status" value="open" checked onchange="applyFilters()"> Active</label>
+      <label class="filter-option"><input type="radio" name="status" value="resolved" onchange="applyFilters()"> Resolved</label>
+      <label class="filter-option"><input type="radio" name="status" value="" onchange="applyFilters()"> All</label>
+    </div>
+
+    <div class="filter-card">
+      <div class="filter-card-title">Category</div>
+      <label class="filter-option"><input type="checkbox" class="cat-filter" value="Electronics" onchange="applyFilters()"> 💻 Electronics</label>
+      <label class="filter-option"><input type="checkbox" class="cat-filter" value="Bags" onchange="applyFilters()"> 👜 Bags</label>
+      <label class="filter-option"><input type="checkbox" class="cat-filter" value="Clothing" onchange="applyFilters()"> 👔 Clothing</label>
+      <label class="filter-option"><input type="checkbox" class="cat-filter" value="Documents" onchange="applyFilters()"> 📋 Documents</label>
+      <label class="filter-option"><input type="checkbox" class="cat-filter" value="Accessories" onchange="applyFilters()"> 💍 Accessories</label>
+      <label class="filter-option"><input type="checkbox" class="cat-filter" value="Sports" onchange="applyFilters()"> 🏸 Sports</label>
+      <label class="filter-option"><input type="checkbox" class="cat-filter" value="Books" onchange="applyFilters()"> 📖 Books</label>
+      <label class="filter-option"><input type="checkbox" class="cat-filter" value="Others" onchange="applyFilters()"> 📦 Others</label>
+      <div class="filter-divider"></div>
+      <button class="btn-reset" onclick="resetFilters()">Reset All Filters</button>
+    </div>
+  </div>
+
+  <!-- ITEMS AREA -->
+  <div class="items-area">
+    <div class="items-toolbar">
+      <div class="results-count" id="results-count">Loading items...</div>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <select class="sort-select" id="sort-select" onchange="applyFilters()">
+          <option value="newest">Newest First</option>
+          <option value="oldest">Oldest First</option>
+        </select>
+        <a href="report.html" class="btn-report-new">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          Report Item
+        </a>
+      </div>
+    </div>
+
+    <div class="items-grid" id="items-grid">
+      <div class="item-card"><div class="skeleton" style="height:190px;border-radius:0;"></div><div style="padding:18px 20px;"><div class="skeleton" style="height:14px;width:80px;margin-bottom:12px;"></div><div class="skeleton" style="height:18px;margin-bottom:10px;"></div><div class="skeleton" style="height:12px;width:60%;"></div></div></div>
+      <div class="item-card"><div class="skeleton" style="height:190px;border-radius:0;"></div><div style="padding:18px 20px;"><div class="skeleton" style="height:14px;width:80px;margin-bottom:12px;"></div><div class="skeleton" style="height:18px;margin-bottom:10px;"></div><div class="skeleton" style="height:12px;width:60%;"></div></div></div>
+      <div class="item-card"><div class="skeleton" style="height:190px;border-radius:0;"></div><div style="padding:18px 20px;"><div class="skeleton" style="height:14px;width:80px;margin-bottom:12px;"></div><div class="skeleton" style="height:18px;margin-bottom:10px;"></div><div class="skeleton" style="height:12px;width:60%;"></div></div></div>
+    </div>
+
+    <div class="pagination" id="pagination"></div>
+  </div>
+</div>
+
+<script src="../js/api.js"></script>
+<script>
+  let currentPage = 1, searchTimer = null, searchQuery = '';
+
+  function getCatIcon(c) {
+    return {Electronics:'💻',Bags:'👜',Clothing:'👔',Documents:'📋',Accessories:'💍',Sports:'🏸',Books:'📖',Others:'📦'}[c]||'📦';
+  }
+  function formatDate(iso) {
+    if (!iso) return '';
+    const d = new Date(iso), diff = Math.floor((new Date()-d)/1000);
+    if (diff < 3600)   return Math.floor(diff/60)+'m ago';
+    if (diff < 86400)  return Math.floor(diff/3600)+'h ago';
+    if (diff < 604800) return Math.floor(diff/86400)+'d ago';
+    return d.toLocaleDateString();
+  }
+
+  // URL param for category
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('category')) {
+    document.querySelectorAll('.cat-filter').forEach(cb => {
+      if (cb.value === urlParams.get('category')) cb.checked = true;
+    });
+  }
+
+  function debounceSearch(val) {
+    clearTimeout(searchTimer); searchQuery = val;
+    searchTimer = setTimeout(() => { currentPage = 1; loadItems(); }, 300);
+  }
+
+  function applyFilters() { currentPage = 1; loadItems(); }
+
+  function resetFilters() {
+    document.querySelectorAll('input[name="type"]')[0].checked   = true;
+    document.querySelectorAll('input[name="status"]')[0].checked = true;
+    document.querySelectorAll('.cat-filter').forEach(cb => cb.checked = false);
+    document.getElementById('sort-select').value = 'newest';
+    document.getElementById('search-input').value = '';
+    searchQuery = ''; currentPage = 1; loadItems();
+  }
+
+  async function loadItems() {
+    const grid = document.getElementById('items-grid');
+    grid.innerHTML = `
+      <div class="item-card"><div class="skeleton" style="height:190px;border-radius:0;"></div><div style="padding:18px 20px;"><div class="skeleton" style="height:14px;width:80px;margin-bottom:12px;"></div><div class="skeleton" style="height:18px;margin-bottom:10px;"></div><div class="skeleton" style="height:12px;width:60%;"></div></div></div>
+      <div class="item-card"><div class="skeleton" style="height:190px;border-radius:0;"></div><div style="padding:18px 20px;"><div class="skeleton" style="height:14px;width:80px;margin-bottom:12px;"></div><div class="skeleton" style="height:18px;margin-bottom:10px;"></div><div class="skeleton" style="height:12px;width:60%;"></div></div></div>
+      <div class="item-card"><div class="skeleton" style="height:190px;border-radius:0;"></div><div style="padding:18px 20px;"><div class="skeleton" style="height:14px;width:80px;margin-bottom:12px;"></div><div class="skeleton" style="height:18px;margin-bottom:10px;"></div><div class="skeleton" style="height:12px;width:60%;"></div></div></div>
+    `;
+
+    const type   = document.querySelector('input[name="type"]:checked').value;
+    const status = document.querySelector('input[name="status"]:checked').value;
+    const cats   = [...document.querySelectorAll('.cat-filter:checked')].map(c => c.value);
+
+    try {
+      let data;
+      if (searchQuery) {
+        data = await Items.search(searchQuery);
+        data.total = data.items ? data.items.length : 0; data.pages = 1;
+      } else {
+        const params = { page: currentPage, limit: 9 };
+        if (type)   params.type   = type;
+        if (status) params.status = status;
+        if (cats.length === 1) params.category = cats[0];
+        data = await Items.getAll(params);
+      }
+
+      let items = data.items || [];
+      if (cats.length > 1) items = items.filter(i => cats.includes(i.category));
+
+      const total = data.total || items.length;
+      document.getElementById('results-count').innerHTML = `Showing <strong>${items.length}</strong> of <strong>${total}</strong> items`;
+
+      if (!items.length) {
+        grid.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><h3>No items found</h3><p>Try adjusting your filters or search terms</p></div>`;
+        document.getElementById('pagination').innerHTML = ''; return;
+      }
+
+      grid.innerHTML = items.map(item => `
+        <div class="item-card" onclick="window.location='item.html?id=${item._id}'">
+          ${item.imageUrl
+            ? `<img class="item-img" src="${item.imageUrl}" alt="${item.title}" loading="lazy">`
+            : `<div class="item-img-ph">${getCatIcon(item.category)}</div>`}
+          <div class="item-body">
+            <div class="item-badges">
+              <span class="item-badge ${item.type==='lost'?'badge-lost':'badge-found'}">${item.type==='lost'?'Missing':'Recovered'}</span>
+              <span class="item-badge ${item.status==='resolved'?'badge-resolved':'badge-open'}">${item.status==='resolved'?'Closed':'Active'}</span>
+            </div>
+            <div class="item-title">${item.title}</div>
+            <div class="item-meta">
+              <div class="meta-row">
+                <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                ${item.location}
+              </div>
+              <div class="meta-row">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                ${formatDate(item.createdAt)}
+                ${item.hotspots&&item.hotspots.length?`<span class="pin-tag">· ${item.hotspots.length} pins</span>`:''}
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      renderPagination(data.pages || 1);
+    } catch(e) {
+      grid.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><h3>Could not load items</h3><p>Make sure the backend is running on port 5000.</p></div>`;
+    }
+  }
+
+  function renderPagination(totalPages) {
+    const c = document.getElementById('pagination');
+    if (totalPages <= 1) { c.innerHTML = ''; return; }
+    let html = '';
+    if (currentPage > 1) html += `<button class="page-btn" onclick="changePage(${currentPage-1})">←</button>`;
+    for (let i = 1; i <= totalPages; i++) html += `<button class="page-btn ${i===currentPage?'active':''}" onclick="changePage(${i})">${i}</button>`;
+    if (currentPage < totalPages) html += `<button class="page-btn" onclick="changePage(${currentPage+1})">→</button>`;
+    c.innerHTML = html;
+  }
+
+  function changePage(p) { currentPage = p; loadItems(); window.scrollTo({top:0,behavior:'smooth'}); }
+
+  const user = getCurrentUser();
+  if (user) {
+    document.getElementById('nav-cta').innerHTML = `
+      <a href="dashboard.html" class="btn-login">Dashboard</a>
+      <a href="report.html" class="btn-primary-nav">+ Report Item</a>
+    `;
+  }
+
+  loadItems();
+</script>
+</body>
+</html>

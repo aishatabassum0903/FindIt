@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account — FindIt</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy:#0A1628; --blue:#1B4FFF; --teal:#00C6B3; --amber:#FFB830;
+      --white:#FFFFFF; --gray-50:#F7F9FC; --gray-100:#EEF2F8;
+      --gray-200:#D8E0ED; --gray-400:#8A97B0; --gray-600:#4A5568;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Outfit',sans-serif;background:var(--gray-50);color:var(--navy);min-height:100vh;display:flex;-webkit-font-smoothing:antialiased;}
+    a{text-decoration:none;color:inherit;}
+
+    /* LEFT PANEL */
+    .left-panel{width:380px;flex-shrink:0;background:var(--navy);padding:48px;display:flex;flex-direction:column;position:relative;overflow:hidden;}
+    .left-panel::before{content:'';position:absolute;top:-100px;right:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(27,79,255,0.3) 0%,transparent 70%);border-radius:50%;}
+    .left-panel::after{content:'';position:absolute;bottom:-80px;left:-80px;width:300px;height:300px;background:radial-gradient(circle,rgba(0,198,179,0.15) 0%,transparent 70%);border-radius:50%;}
+    .panel-logo{display:flex;align-items:center;gap:10px;margin-bottom:auto;position:relative;z-index:1;}
+    .panel-logo-icon{width:38px;height:38px;background:var(--blue);border-radius:10px;display:flex;align-items:center;justify-content:center;}
+    .panel-logo-icon svg{width:20px;height:20px;fill:none;stroke:white;stroke-width:2.5;stroke-linecap:round;}
+    .panel-logo span{font-family:'Instrument Serif',serif;font-size:26px;color:white;}
+    .panel-content{position:relative;z-index:1;margin-top:auto;padding-bottom:20px;}
+    .panel-title{font-family:'Instrument Serif',serif;font-size:34px;color:white;line-height:1.2;margin-bottom:16px;letter-spacing:-0.5px;}
+    .panel-title em{color:var(--amber);font-style:italic;}
+    .panel-sub{font-size:14px;color:rgba(255,255,255,0.5);line-height:1.7;margin-bottom:28px;}
+    .feature-list{display:flex;flex-direction:column;gap:12px;}
+    .feature-item{display:flex;align-items:center;gap:12px;}
+    .feature-dot{width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;}
+    .feature-text{font-size:13px;color:rgba(255,255,255,0.6);line-height:1.4;}
+
+    /* RIGHT PANEL */
+    .right-panel{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 24px;overflow-y:auto;}
+    .auth-box{width:100%;max-width:480px;}
+    .auth-title{font-family:'Instrument Serif',serif;font-size:30px;color:var(--navy);margin-bottom:6px;letter-spacing:-0.5px;}
+    .auth-sub{font-size:14px;color:var(--gray-400);margin-bottom:32px;}
+    .auth-sub a{color:var(--blue);font-weight:600;}
+
+    .form-group{margin-bottom:18px;}
+    .form-label{display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:7px;}
+    .form-control{width:100%;padding:12px 16px;border:1.5px solid var(--gray-200);border-radius:12px;font-family:'Outfit',sans-serif;font-size:14px;color:var(--navy);background:white;outline:none;transition:all 0.2s;}
+    .form-control:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(27,79,255,0.08);}
+    .form-control::placeholder{color:var(--gray-400);}
+    select.form-control{cursor:pointer;}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+
+    .strength-bar{height:4px;background:var(--gray-100);border-radius:2px;margin-top:8px;overflow:hidden;}
+    .strength-fill{height:100%;border-radius:2px;transition:all 0.3s;width:0;}
+    .strength-text{font-size:12px;margin-top:5px;font-weight:600;}
+
+    .terms-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:24px;font-size:13px;color:var(--gray-600);line-height:1.5;}
+    .terms-row input{width:16px;height:16px;accent-color:var(--blue);margin-top:1px;flex-shrink:0;}
+    .terms-row a{color:var(--blue);font-weight:500;}
+
+    .btn-submit{width:100%;padding:14px;border-radius:12px;background:var(--blue);color:white;border:none;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 16px rgba(27,79,255,0.3);}
+    .btn-submit:hover{background:#1240E0;transform:translateY(-1px);}
+    .btn-submit:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+
+    .auth-switch{text-align:center;font-size:14px;color:var(--gray-600);margin-top:20px;}
+    .auth-switch a{color:var(--blue);font-weight:700;}
+    .back-home{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--gray-400);margin-top:16px;transition:color 0.18s;}
+    .back-home:hover{color:var(--navy);}
+    .back-home svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;}
+
+    #toast-container{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px;}
+    @keyframes slideIn{from{opacity:0;transform:translateX(40px);}to{opacity:1;transform:translateX(0);}}
+
+    @media(max-width:768px){.left-panel{display:none;}.right-panel{padding:32px 20px;}.form-grid{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+
+<!-- LEFT PANEL -->
+<div class="left-panel">
+  <div class="panel-logo">
+    <div class="panel-logo-icon">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg>
+    </div>
+    <span>FindIt</span>
+  </div>
+  <div class="panel-content">
+    <h2 class="panel-title">Join the<br>campus<br><em>network</em></h2>
+    <p class="panel-sub">Create your free account and start recovering lost items on campus today.</p>
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="feature-dot">📋</div>
+        <div class="feature-text">Report lost or found items in seconds</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-dot">🤖</div>
+        <div class="feature-text">AI automatically finds matches for you</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-dot">🔔</div>
+        <div class="feature-text">Get notified instantly when a match is found</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-dot">🔒</div>
+        <div class="feature-text">Secure claim verification system</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="right-panel">
+  <div class="auth-box">
+    <h1 class="auth-title">Create your account</h1>
+    <p class="auth-sub">Already have an account? <a href="login.html">Sign in here</a></p>
+
+    <form id="register-form">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" id="name" class="form-control" placeholder="John Doe" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Student ID</label>
+          <input type="text" id="studentId" class="form-control" placeholder="21CS001" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">College Email</label>
+        <input type="email" id="email" class="form-control" placeholder="you@college.edu" required>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Department</label>
+          <select id="department" class="form-control" required>
+            <option value="">Select dept.</option>
+            <option>Computer Science</option>
+            <option>Electronics</option>
+            <option>Mechanical</option>
+            <option>Civil</option>
+            <option>Business</option>
+            <option>Arts & Science</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone (optional)</label>
+          <input type="tel" id="phone" class="form-control" placeholder="+91 98765 43210">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" id="password" class="form-control" placeholder="Min. 6 characters" required oninput="checkStrength(this.value)">
+        <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+        <div class="strength-text" id="strength-text"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirm Password</label>
+        <input type="password" id="confirm-password" class="form-control" placeholder="Repeat password" required>
+      </div>
+      <div class="terms-row">
+        <input type="checkbox" id="terms" required>
+        <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+      </div>
+      <button type="submit" class="btn-submit" id="submit-btn">Create Account</button>
+    </form>
+
+    <div class="auth-switch">
+      Already have an account? <a href="login.html">Sign In</a>
+    </div>
+    <div style="text-align:center;">
+      <a href="../index.html" class="back-home">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back to Home
+      </a>
+    </div>
+  </div>
+</div>
+
+<script src="../js/api.js"></script>
+<script>
+  if (getCurrentUser()) window.location.href = 'dashboard.html';
+
+  function checkStrength(pw) {
+    const fill = document.getElementById('strength-fill');
+    const text = document.getElementById('strength-text');
+    let score = 0;
+    if (pw.length >= 6)  score++;
+    if (pw.length >= 10) score++;
+    if (/[A-Z]/.test(pw)) score++;
+    if (/[0-9]/.test(pw)) score++;
+    if (/[^A-Za-z0-9]/.test(pw)) score++;
+    const levels = [
+      {w:'0%',   c:'#EF4444', l:''},
+      {w:'20%',  c:'#EF4444', l:'Very Weak'},
+      {w:'40%',  c:'#F59E0B', l:'Weak'},
+      {w:'60%',  c:'#F59E0B', l:'Fair'},
+      {w:'80%',  c:'#10B981', l:'Strong'},
+      {w:'100%', c:'#10B981', l:'Very Strong'},
+    ];
+    const lv = levels[score] || levels[0];
+    fill.style.width = lv.w; fill.style.background = lv.c;
+    text.textContent = lv.l; text.style.color = lv.c;
+  }
+
+  document.getElementById('register-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const pw  = document.getElementById('password').value;
+    const cpw = document.getElementById('confirm-password').value;
+    if (pw !== cpw) { showToast('Passwords do not match', 'error'); return; }
+    if (pw.length < 6) { showToast('Password must be at least 6 characters', 'error'); return; }
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true; btn.textContent = 'Creating account...';
+    try {
+      const data = await Auth.register({
+        name:       document.getElementById('name').value,
+        studentId:  document.getElementById('studentId').value,
+        email:      document.getElementById('email').value,
+        department: document.getElementById('department').value,
+        phone:      document.getElementById('phone').value,
+        password:   pw
+      });
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user',  JSON.stringify(data.user));
+      showToast('Account created! Welcome 🎉', 'success');
+      setTimeout(() => window.location.href = 'dashboard.html', 800);
+    } catch(err) {
+      showToast(err.message || 'Registration failed', 'error');
+      btn.disabled = false; btn.textContent = 'Create Account';
+    }
+  });
+</script>
+</body>
+</html>

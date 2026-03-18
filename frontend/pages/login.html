@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — FindIt</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy:#0A1628; --blue:#1B4FFF; --teal:#00C6B3; --amber:#FFB830;
+      --white:#FFFFFF; --gray-50:#F7F9FC; --gray-100:#EEF2F8;
+      --gray-200:#D8E0ED; --gray-400:#8A97B0; --gray-600:#4A5568;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Outfit',sans-serif;background:var(--gray-50);color:var(--navy);min-height:100vh;display:flex;-webkit-font-smoothing:antialiased;}
+    a{text-decoration:none;color:inherit;}
+
+    /* LEFT PANEL */
+    .left-panel{width:420px;flex-shrink:0;background:var(--navy);padding:48px;display:flex;flex-direction:column;position:relative;overflow:hidden;}
+    .left-panel::before{content:'';position:absolute;top:-100px;right:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(27,79,255,0.3) 0%,transparent 70%);border-radius:50%;}
+    .left-panel::after{content:'';position:absolute;bottom:-80px;left:-80px;width:300px;height:300px;background:radial-gradient(circle,rgba(0,198,179,0.15) 0%,transparent 70%);border-radius:50%;}
+    .panel-logo{display:flex;align-items:center;gap:10px;margin-bottom:auto;position:relative;z-index:1;}
+    .panel-logo-icon{width:38px;height:38px;background:var(--blue);border-radius:10px;display:flex;align-items:center;justify-content:center;}
+    .panel-logo-icon svg{width:20px;height:20px;fill:none;stroke:white;stroke-width:2.5;stroke-linecap:round;}
+    .panel-logo span{font-family:'Instrument Serif',serif;font-size:26px;color:white;}
+    .panel-content{position:relative;z-index:1;margin-top:auto;padding-bottom:20px;}
+    .panel-title{font-family:'Instrument Serif',serif;font-size:36px;color:white;line-height:1.2;margin-bottom:16px;letter-spacing:-0.5px;}
+    .panel-title em{color:var(--teal);font-style:italic;}
+    .panel-sub{font-size:14px;color:rgba(255,255,255,0.5);line-height:1.7;margin-bottom:32px;}
+    .panel-stats{display:flex;gap:24px;}
+    .panel-stat-val{font-size:24px;font-weight:800;color:white;}
+    .panel-stat-lab{font-size:12px;color:rgba(255,255,255,0.4);margin-top:2px;}
+
+    /* RIGHT PANEL */
+    .right-panel{flex:1;display:flex;align-items:center;justify-content:center;padding:48px 24px;}
+    .auth-box{width:100%;max-width:420px;}
+    .auth-title{font-family:'Instrument Serif',serif;font-size:32px;color:var(--navy);margin-bottom:6px;letter-spacing:-0.5px;}
+    .auth-sub{font-size:14px;color:var(--gray-400);margin-bottom:36px;}
+    .auth-sub a{color:var(--blue);font-weight:600;}
+
+    .form-group{margin-bottom:20px;}
+    .form-label{display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:7px;}
+    .form-control{width:100%;padding:12px 16px;border:1.5px solid var(--gray-200);border-radius:12px;font-family:'Outfit',sans-serif;font-size:14px;color:var(--navy);background:white;outline:none;transition:all 0.2s;}
+    .form-control:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(27,79,255,0.08);}
+    .form-control::placeholder{color:var(--gray-400);}
+    .pw-wrapper{position:relative;}
+    .pw-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--gray-400);font-size:16px;padding:0;}
+
+    .form-footer{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
+    .remember{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gray-600);cursor:pointer;}
+    .remember input{width:16px;height:16px;accent-color:var(--blue);}
+    .forgot{font-size:13px;color:var(--blue);font-weight:500;}
+
+    .btn-submit{width:100%;padding:14px;border-radius:12px;background:var(--blue);color:white;border:none;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 16px rgba(27,79,255,0.3);}
+    .btn-submit:hover{background:#1240E0;transform:translateY(-1px);box-shadow:0 6px 24px rgba(27,79,255,0.4);}
+    .btn-submit:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+
+    .divider{display:flex;align-items:center;gap:12px;margin:24px 0;}
+    .divider-line{flex:1;height:1px;background:var(--gray-200);}
+    .divider span{font-size:13px;color:var(--gray-400);}
+
+    .auth-switch{text-align:center;font-size:14px;color:var(--gray-600);}
+    .auth-switch a{color:var(--blue);font-weight:700;}
+
+    .back-home{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--gray-400);margin-top:20px;transition:color 0.18s;}
+    .back-home:hover{color:var(--navy);}
+    .back-home svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;}
+
+    #toast-container{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px;}
+    @keyframes slideIn{from{opacity:0;transform:translateX(40px);}to{opacity:1;transform:translateX(0);}}
+
+    @media(max-width:768px){.left-panel{display:none;}.right-panel{padding:32px 20px;}}
+  </style>
+</head>
+<body>
+
+<!-- LEFT PANEL -->
+<div class="left-panel">
+  <div class="panel-logo">
+    <div class="panel-logo-icon">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg>
+    </div>
+    <span>FindIt</span>
+  </div>
+  <div class="panel-content">
+    <h2 class="panel-title">Welcome<br>back to<br><em>FindIt</em></h2>
+    <p class="panel-sub">Sign in to manage your reports, track matches, and help reunite students with their belongings.</p>
+    <div class="panel-stats">
+      <div>
+        <div class="panel-stat-val" id="s-lost">0</div>
+        <div class="panel-stat-lab">Items Lost</div>
+      </div>
+      <div>
+        <div class="panel-stat-val" id="s-found">0</div>
+        <div class="panel-stat-lab">Items Found</div>
+      </div>
+      <div>
+        <div class="panel-stat-val" id="s-resolved">0</div>
+        <div class="panel-stat-lab">Reunited</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="right-panel">
+  <div class="auth-box">
+    <h1 class="auth-title">Sign in</h1>
+    <p class="auth-sub">Don't have an account? <a href="register.html">Create one free</a></p>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label class="form-label">College Email</label>
+        <input type="email" id="email" class="form-control" placeholder="you@college.edu" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="pw-wrapper">
+          <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+          <button type="button" class="pw-toggle" onclick="togglePw()">👁</button>
+        </div>
+      </div>
+      <div class="form-footer">
+        <label class="remember">
+          <input type="checkbox"> Remember me
+        </label>
+        <a href="#" class="forgot">Forgot password?</a>
+      </div>
+      <button type="submit" class="btn-submit" id="submit-btn">Sign In</button>
+    </form>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span>or</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="auth-switch">
+      New to FindIt? <a href="register.html">Create an account</a>
+    </div>
+
+    <div style="text-align:center;">
+      <a href="../index.html" class="back-home">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back to Home
+      </a>
+    </div>
+  </div>
+</div>
+
+<script src="../js/api.js"></script>
+<script>
+  if (getCurrentUser()) window.location.href = 'dashboard.html';
+
+  function togglePw() {
+    const inp = document.getElementById('password');
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+  }
+
+  async function loadStats() {
+    try {
+      const data = await Items.stats();
+      document.getElementById('s-lost').textContent     = data.totalLost  || 0;
+      document.getElementById('s-found').textContent    = data.totalFound || 0;
+      document.getElementById('s-resolved').textContent = data.resolved   || 0;
+    } catch(e) {}
+  }
+
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true; btn.textContent = 'Signing in...';
+    try {
+      const data = await Auth.login({
+        email:    document.getElementById('email').value,
+        password: document.getElementById('password').value
+      });
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user',  JSON.stringify(data.user));
+      showToast('Welcome back, ' + data.user.name + '!', 'success');
+      setTimeout(() => window.location.href = 'dashboard.html', 800);
+    } catch(err) {
+      showToast(err.message || 'Login failed', 'error');
+      btn.disabled = false; btn.textContent = 'Sign In';
+    }
+  });
+
+  loadStats();
+</script>
+</body>
+</html>
