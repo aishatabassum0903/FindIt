@@ -441,6 +441,7 @@
           <td>
             <div style="display:flex;gap:6px;">
               <button class="btn-action" onclick="window.location='item.html?id=${item._id}'">View</button>
+              <button class="btn-action" style="border-color:#D1FAE5;color:#065F46;" onclick="viewClaims('${item._id}','${item.title}')">Claims</button>
               <button class="btn-action btn-action-danger" onclick="deleteItem('${item._id}',this)">Delete</button>
             </div>
           </td>
@@ -523,6 +524,87 @@
   });
 
   loadDashboard();
+async function viewClaims(itemId, itemTitle) {
+  document.getElementById('claims-modal-title').textContent = 'Claims for: ' + itemTitle;
+  document.getElementById('claims-list').innerHTML = `
+    <div style="height:80px;background:var(--gray-100);border-radius:12px;margin-bottom:8px;animation:shimmer 1.3s infinite;"></div>
+    <div style="height:80px;background:var(--gray-100);border-radius:12px;animation:shimmer 1.3s infinite;"></div>
+  `;
+  document.getElementById('claims-modal').style.display = 'flex';
+  try {
+    const data = await Claims.getForItem(itemId);
+    const claims = data.claims || [];
+    if (!claims.length) {
+      document.getElementById('claims-list').innerHTML = `
+        <div style="text-align:center;padding:32px;color:var(--gray-400);">
+          <div style="font-size:40px;margin-bottom:12px;">📭</div>
+          <p>No claims submitted yet</p>
+        </div>
+      `;
+      return;
+    }
+    document.getElementById('claims-list').innerHTML = claims.map(claim => `
+      <div style="background:var(--gray-50);border-radius:14px;padding:16px;margin-bottom:12px;border:1.5px solid var(--gray-200);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div style="font-size:13px;font-weight:700;color:var(--navy);">Claim submitted</div>
+          <span style="padding:3px 10px;border-radius:100px;font-size:11px;font-weight:700;
+            background:${claim.status==='approved'?'#D1FAE5':claim.status==='rejected'?'#FEE2E2':'#DBEAFE'};
+            color:${claim.status==='approved'?'#065F46':claim.status==='rejected'?'#991B1B':'#1D4ED8'};">
+            ${claim.status.toUpperCase()}
+          </span>
+        </div>
+        <p style="font-size:13px;color:var(--gray-600);line-height:1.6;margin-bottom:12px;">"${claim.description}"</p>
+        ${claim.hotspotMatchCount > 0 ? `
+          <div style="font-size:12px;color:#00C6B3;font-weight:600;margin-bottom:12px;">
+            ✅ ${claim.hotspotMatchCount} feature pin(s) matched!
+          </div>` : ''}
+        ${claim.status === 'pending' ? `
+          <div style="display:flex;gap:8px;">
+            <button onclick="updateClaim('${claim._id}','approved')"
+              style="flex:1;padding:10px;border-radius:10px;background:#10B981;color:white;border:none;
+              font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">
+              ✓ Approve
+            </button>
+            <button onclick="updateClaim('${claim._id}','rejected')"
+              style="flex:1;padding:10px;border-radius:10px;background:white;color:#EF4444;
+              border:1.5px solid #FEE2E2;font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">
+              ✕ Reject
+            </button>
+          </div>` : `
+          <p style="font-size:13px;color:var(--gray-400);">This claim has been ${claim.status}.</p>`}
+      </div>
+    `).join('');
+  } catch(e) {
+    document.getElementById('claims-list').innerHTML = `<p style="text-align:center;padding:20px;color:var(--gray-400);">Failed to load claims.</p>`;
+  }
+}
+
+async function updateClaim(claimId, status) {
+  try {
+    await Claims.updateStatus(claimId, status);
+    showToast(status === 'approved' ? 'Claim approved! ✅' : 'Claim rejected', status === 'approved' ? 'success' : 'info');
+    closeClaimsModal();
+    loadMyItems();
+    loadDashboard();
+  } catch(e) {
+    showToast(e.message || 'Failed to update claim', 'error');
+  }
+}
+
+function closeClaimsModal() {
+  document.getElementById('claims-modal').style.display = 'none';
+}
 </script>
+<!-- CLAIMS MODAL -->
+<div id="claims-modal" style="display:none;">
+  <div style="position:fixed;inset:0;background:rgba(10,22,40,0.5);z-index:900;display:flex;align-items:center;justify-content:center;padding:20px;" onclick="closeClaimsModal()">
+    <div style="background:white;border-radius:24px;padding:36px;max-width:560px;width:100%;box-shadow:0 20px 60px rgba(10,22,40,0.2);max-height:90vh;overflow-y:auto;" onclick="event.stopPropagation()">
+      <div style="font-family:'Instrument Serif',serif;font-size:24px;color:var(--navy);margin-bottom:8px;" id="claims-modal-title">Claims</div>
+      <div style="font-size:14px;color:var(--gray-400);margin-bottom:24px;">Review and approve or reject ownership claims</div>
+      <div id="claims-list"></div>
+      <button onclick="closeClaimsModal()" style="width:100%;margin-top:16px;padding:12px;border-radius:12px;border:1.5px solid var(--gray-200);background:white;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;color:var(--gray-600);cursor:pointer;">Close</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
