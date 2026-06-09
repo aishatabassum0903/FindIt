@@ -2,9 +2,9 @@
 
 /* ===== CSS VARIABLES ===== */
 :root {
-  --primary:        #2563EB;
+  --primary:        #800000;
   --primary-dark:   #1D4ED8;
-  --primary-light:  #EFF6FF;
+  --primary-light:  #FFF5F5;
   --amber:          #F59E0B;
   --amber-light:    #FFFBEB;
   --success:        #10B981;
