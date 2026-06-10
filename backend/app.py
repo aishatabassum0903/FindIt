@@ -41,6 +41,7 @@ from routes.matches import matches_bp
 from routes.claims  import claims_bp
 from routes.notifs  import notifs_bp
 from routes.upload  import upload_bp
+from routes.admin import admin_bp
 
 app.register_blueprint(auth_bp,    url_prefix="/api/auth")
 app.register_blueprint(items_bp,   url_prefix="/api/items")
@@ -48,6 +49,7 @@ app.register_blueprint(matches_bp, url_prefix="/api/matches")
 app.register_blueprint(claims_bp,  url_prefix="/api/claims")
 app.register_blueprint(notifs_bp,  url_prefix="/api/notifications")
 app.register_blueprint(upload_bp,  url_prefix="/api/upload")
+app.register_blueprint(admin_bp, url_prefix="/api/admin")
 
 @app.route("/api/test")
 def test():
