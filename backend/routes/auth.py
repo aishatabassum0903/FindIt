@@ -113,3 +113,41 @@ def get_me():
         "phone":      user.get("phone",""),
         "role":       user["role"]
     })
+@auth_bp.route("/create-admin", methods=["POST"])
+def create_admin():
+    from bson import ObjectId
+    users_col = get_db()
+    data = request.get_json()
+
+    # Secret key check so random people can't create admins
+    if data.get("secret") != "SRITW_ADMIN_2024":
+        return jsonify({"error": "Unauthorized"}), 403
+
+    required = ["name", "studentId", "email", "password", "department"]
+    for field in required:
+        if not data.get(field):
+            return jsonify({"error": f"{field} is required"}), 400
+
+    if users_col.find_one({"email": data["email"]}):
+        return jsonify({"error": "Email already registered"}), 409
+
+    hashed = bcrypt.hashpw(data["password"].encode("utf-8"), bcrypt.gensalt())
+
+    user = {
+        "name":         data["name"],
+        "studentId":    data["studentId"],
+        "email":        data["email"],
+        "passwordHash": hashed.decode("utf-8"),
+        "department":   data["department"],
+        "phone":        data.get("phone", ""),
+        "role":         "admin",
+        "avatar":       "",
+        "createdAt":    __import__("datetime").datetime.utcnow()
+    }
+
+    result = users_col.insert_one(user)
+
+    return jsonify({
+        "message": "Admin account created successfully",
+        "id": str(result.inserted_id)
+    }), 201

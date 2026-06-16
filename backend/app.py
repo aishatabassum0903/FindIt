@@ -49,7 +49,7 @@ app.register_blueprint(matches_bp, url_prefix="/api/matches")
 app.register_blueprint(claims_bp,  url_prefix="/api/claims")
 app.register_blueprint(notifs_bp,  url_prefix="/api/notifications")
 app.register_blueprint(upload_bp,  url_prefix="/api/upload")
-app.register_blueprint(admin_bp, url_prefix="/api/admin")
+app.register_blueprint(admin_bp,   url_prefix="/api/admin")
 
 @app.route("/api/test")
 def test():
