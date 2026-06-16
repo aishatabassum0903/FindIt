@@ -964,5 +964,16 @@
   loadStats();
   loadItems();
 </script>
+<script>
+  // Show admin button in navbar if logged in as admin
+  const __navUser = JSON.parse(localStorage.getItem('user') || 'null');
+  if (__navUser && __navUser.role === 'admin') {
+    const navCta = document.getElementById('nav-cta');
+    navCta.innerHTML = `
+      <a href="pages/admin.html" class="btn-nav-primary">⚙️ Admin Panel</a>
+      <a href="#" onclick="localStorage.removeItem('token');localStorage.removeItem('user');location.reload();" class="btn-nav-login">Logout</a>
+    `;
+  }
+</script>
 </body>
 </html>

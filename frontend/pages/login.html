@@ -151,7 +151,8 @@
 
 <script src="../js/api.js"></script>
 <script>
-  if (getCurrentUser()) window.location.href = 'dashboard.html';
+  const __u = getCurrentUser();
+if (__u) window.location.href = __u.role === 'admin' ? 'admin.html' : 'dashboard.html';
 
   function togglePw() {
     const inp = document.getElementById('password');
@@ -179,7 +180,13 @@
       localStorage.setItem('token', data.token);
       localStorage.setItem('user',  JSON.stringify(data.user));
       showToast('Welcome back, ' + data.user.name + '!', 'success');
-      setTimeout(() => window.location.href = 'dashboard.html', 800);
+      setTimeout(() => {
+  if (data.user.role === 'admin') {
+    window.location.href = 'admin.html';
+  } else {
+    window.location.href = 'dashboard.html';
+  }
+}, 800);
     } catch(err) {
       showToast(err.message || 'Login failed', 'error');
       btn.disabled = false; btn.textContent = 'Sign In';
