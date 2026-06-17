@@ -87,12 +87,11 @@
     .btn-nav-primary {
       padding: 8px 20px; border-radius: 8px;
       font-size: 14px; font-weight: 600; color: white;
-      background: var(--blue);
+      background: var(--navy);
       border: none; transition: all 0.18s;
-      box-shadow: 0 4px 12px rgba(27,79,255,0.28);
+      box-shadow: 0 4px 12px rgba(74,0,0,0.28);
     }
-    .btn-nav-primary:hover { background: #1240E0; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(27,79,255,0.36); }
-
+    .btn-nav-primary:hover { background: var(--navy); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(74,0,0,0.36); }
     /* ── HERO ── */
     .hero {
       min-height: 100vh;
@@ -108,8 +107,8 @@
       content: '';
       position: absolute; inset: 0;
       background-image:
-        linear-gradient(rgba(27,79,255,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(27,79,255,0.04) 1px, transparent 1px);
+        linear-gradient(rgba(74,0,0,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(74,0,0,0.04) 1px, transparent 1px);
       background-size: 48px 48px;
       mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
     }
@@ -117,7 +116,7 @@
     /* Glow blobs */
     .hero-blob-1 {
       position: absolute; width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(27,79,255,0.08) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(74,0,0,0.08) 0%, transparent 70%);
       top: -100px; right: -100px; border-radius: 50%;
       animation: blobFloat 8s ease-in-out infinite;
     }
@@ -382,7 +381,7 @@
       background: white;
       border-color: var(--blue);
       transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(27,79,255,0.1);
+      box-shadow: 0 8px 24px rgba(74,0,0,0.1);
     }
     .cat-emoji { font-size: 30px; margin-bottom: 10px; display: block; }
     .cat-name  { font-size: 12px; font-weight: 600; color: var(--gray-600); }
@@ -414,11 +413,11 @@
       display: inline-flex; align-items: center; gap: 6px;
       padding: 9px 18px; border-radius: 10px;
       font-size: 13px; font-weight: 600; color: var(--blue);
-      border: 1.5px solid rgba(27,79,255,0.2);
-      background: rgba(27,79,255,0.04);
+      border: 1.5px solid rgba(74,0,0,0.2);
+      background: rgba(74,0,0,0.04);
       transition: all 0.18s;
     }
-    .btn-view-all:hover { background: rgba(27,79,255,0.08); }
+    .btn-view-all:hover { background: rgba(74,0,0,0.08); }
     .btn-view-all svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.5; }
 
     .items-grid {
@@ -430,7 +429,7 @@
       border: 1.5px solid var(--gray-200);
       overflow: hidden; cursor: pointer; transition: all 0.22s;
     }
-    .item-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); border-color: rgba(27,79,255,0.3); }
+    .item-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); border-color: rgba(74,0,0,0.3); }
     .item-img {
       width: 100%; height: 180px; object-fit: cover;
       background: var(--gray-50); display: block;
@@ -469,7 +468,7 @@
     .cta-section::before {
       content: '';
       position: absolute; inset: 0;
-      background: radial-gradient(ellipse 60% 80% at 80% 50%, rgba(27,79,255,0.3), transparent);
+      background: radial-gradient(ellipse 60% 80% at 80% 50%, rgba(74,0,0,0.3), transparent);
     }
     .cta-inner {
       max-width: 800px; margin: 0 auto;
