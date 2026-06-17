@@ -37,6 +37,22 @@ a { text-decoration: none; color: inherit; }
 img { max-width: 100%; }
 button { font-family: inherit; cursor: pointer; }
 
+/* ===== REMOVE BLUE TAP/FOCUS HIGHLIGHT ===== */
+button, a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible) {
+  outline: none;
+}
+
 /* ===== TOAST ANIMATION ===== */
 @keyframes slideIn {
   from { opacity: 0; transform: translateX(40px); }
