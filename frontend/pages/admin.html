@@ -328,38 +328,38 @@
   }
 
   async function loadAnalytics(){
-    try{
-      const res=await fetch(`${API}/api/admin/analytics`,{headers:{Authorization:`Bearer ${token}`}});
-      const data=await res.json();
-      const stats=[
-        {icon:'👥',bg:'#EEF2F8',value:data.totalUsers??0,label:'Total Users'},
-        {icon:'📦',bg:'#FFF0F0',value:data.totalItems??0,label:'Total Items'},
-        {icon:'🔗',bg:'#FEF3C7',value:data.totalMatches??0,label:'AI Matches'},
-        {icon:'✅',bg:'#D1FAE5',value:data.resolvedItems??0,label:'Resolved'},
-      ];
-      document.getElementById('statsGrid').innerHTML=stats.map(s=>`
-        <div class="stat-card">
-          <div class="stat-icon" style="background:${s.bg};">${s.icon}</div>
-          <div class="stat-value">${s.value}</div>
-          <div class="stat-label">${s.label}</div>
-        </div>`).join('');
-      const cats=data.itemsByCategory??{};
-      const entries=Object.entries(cats).sort((a,b)=>b[1]-a[1]).slice(0,6);
-      const maxVal=Math.max(...entries.map(e=>e[1]),1);
-      document.getElementById('categoryChart').innerHTML=entries.length
-        ?entries.map(([cat,count])=>`<div class="bar-wrap"><div class="bar-val">${count}</div><div class="bar" style="height:${Math.round((count/maxVal)*140)}px;"></div><div class="bar-lbl">${cat.length>8?cat.slice(0,7)+'…':cat}</div></div>`).join('')
-        :'<div style="color:var(--gray-400);font-size:13px;margin:auto;">No data yet</div>';
-      const lost=data.lostItems??0,found=data.foundItems??0,resolved=data.resolvedItems??0,total=lost+found+1;
-      const lostDeg=Math.round((lost/total)*360),foundDeg=lostDeg+Math.round((found/total)*360);
-      document.getElementById('typeChart').innerHTML=`
-        <div class="donut" style="--lost-deg:${lostDeg}deg;--found-deg:${foundDeg}deg;"></div>
-        <div class="donut-legend">
-          <div class="legend-item"><div class="legend-dot" style="background:var(--blue);"></div> Lost &nbsp;<strong>${lost}</strong></div>
-          <div class="legend-item"><div class="legend-dot" style="background:var(--success);"></div> Found &nbsp;<strong>${found}</strong></div>
-          <div class="legend-item"><div class="legend-dot" style="background:var(--amber);"></div> Resolved &nbsp;<strong>${resolved}</strong></div>
-        </div>`;
-    }catch(e){showToast('Failed to load analytics','error');}
-  }
+  try{
+    const res=await fetch(`${API}/api/admin/analytics`,{headers:{Authorization:`Bearer ${token}`}});
+    const data=await res.json();
+    const ov=data.overview??{};
+    const stats=[
+      {icon:'👥',bg:'#EEF2F8',value:ov.totalUsers??0,label:'Total Users'},
+      {icon:'📦',bg:'#FFF0F0',value:ov.totalItems??0,label:'Total Items'},
+      {icon:'🔗',bg:'#FEF3C7',value:ov.totalMatches??0,label:'AI Matches'},
+      {icon:'✅',bg:'#D1FAE5',value:ov.totalResolved??0,label:'Resolved'},
+    ];
+    document.getElementById('statsGrid').innerHTML=stats.map(s=>`
+      <div class="stat-card">
+        <div class="stat-icon" style="background:${s.bg};">${s.icon}</div>
+        <div class="stat-value">${s.value}</div>
+        <div class="stat-label">${s.label}</div>
+      </div>`).join('');
+    const entries=(data.categories??[]).map(c=>[c.name,c.count]).sort((a,b)=>b[1]-a[1]).slice(0,6);
+    const maxVal=Math.max(...entries.map(e=>e[1]),1);
+    document.getElementById('categoryChart').innerHTML=entries.length
+      ?entries.map(([cat,count])=>`<div class="bar-wrap"><div class="bar-val">${count}</div><div class="bar" style="height:${Math.round((count/maxVal)*140)}px;"></div><div class="bar-lbl">${cat.length>8?cat.slice(0,7)+'…':cat}</div></div>`).join('')
+      :'<div style="color:var(--gray-400);font-size:13px;margin:auto;">No data yet</div>';
+    const lost=ov.totalLost??0,found=ov.totalFound??0,resolved=ov.totalResolved??0,total=lost+found+1;
+    const lostDeg=Math.round((lost/total)*360),foundDeg=lostDeg+Math.round((found/total)*360);
+    document.getElementById('typeChart').innerHTML=`
+      <div class="donut" style="--lost-deg:${lostDeg}deg;--found-deg:${foundDeg}deg;"></div>
+      <div class="donut-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--blue);"></div> Lost &nbsp;<strong>${lost}</strong></div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--success);"></div> Found &nbsp;<strong>${found}</strong></div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--amber);"></div> Resolved &nbsp;<strong>${resolved}</strong></div>
+      </div>`;
+  }catch(e){showToast('Failed to load analytics','error');}
+}
 
   async function loadUsers(){
     try{
